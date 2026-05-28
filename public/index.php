@@ -6,11 +6,6 @@ declare(strict_types=1);
 use Slim\Factory\AppFactory;
 use DI\ContainerBuilder;
 use Slim\Handlers\Strategies\RequestResponseArgs;
-use App\Middleware\AddJsonResponseHeader;
-use App\Controllers\ProductIndex;
-use App\Controllers\Product;
-use App\Middleware\GetProduct;
-use Slim\Routing\RouteCollectorProxy;
 
 //create a constant for the firectory DIR part
 define('APP_ROOT',dirname(__DIR__));
@@ -35,40 +30,10 @@ $collector->setDefaultInvocationStrategy(new RequestResponseArgs);
 //middleware to parse the request data into json
 $app->addBodyParsingMiddleware();
 
-
 //add middleware to check for exceptions because we do not add status codes directly in slim
-$error_middleware = $app->addErrorMiddleware(true,true,true);
+$app->addErrorMiddleware(true,true,true);
 
-//since we want to display the error messages in json format and not html 
-$error_handler = $error_middleware->getDefaultErrorHandler();
-
-//now set the type 
-$error_handler->forceContentType('application/json');
-
-//use the AddJsonResponseHeader middleware class to all the routes
-$app->add(new AddJsonResponseHeader);
-
-//create a route group
-$app->group('/api',function(RouteCollectorProxy $group){
-//create our first route to get all products
-$group->get('/products',ProductIndex::class);
-
-//create a product
-$group->post('/products',[Product::class ,'create']);
-
-//now create group for routes that utilise the same middleware
-$group->group('',function(RouteCollectorProxy $group){
-    //get a single
-    $group->get('/products/{id:[0-9]+}',Product::class.':show');
-
-    //update a product
-    $group->patch('/products/{id:[0-9]+}',[Product::class,'update']);
-
-    //delete a product
-    $group->delete('/products/{id:[0-9]+}',[Product::class,'delete']);
-})->add(GetProduct::class);
-
-});
-
+//routes for product
+require APP_ROOT . '/config/routes.php';
 
 $app->run();

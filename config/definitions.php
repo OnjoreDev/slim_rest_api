@@ -1,6 +1,8 @@
 <?php
 
 use App\Database;
+use Slim\Views\PhpRenderer;
+
 
 //the key is the database class
 // the value is an anonymous function that returns the object
@@ -11,6 +13,15 @@ return [
                             user:'root',
                             password:''  
          );
+    },
+
+    //definitions that tells the slim where to find the viw
+    PhpRenderer::class => function(){
+         $renderer = new PhpRenderer(__DIR__ . '/../views');
+         return $renderer;
     }
-];
+
+
+    ];
+
 

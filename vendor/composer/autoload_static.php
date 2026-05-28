@@ -19,6 +19,7 @@ class ComposerStaticInit63661d32234c94a7c47675fbaa16f77c
         ),
         'S' =>
         array (
+            'Slim\\Views\\' => 11,
             'Slim\\Psr7\\' => 10,
             'Slim\\' => 5,
         ),
@@ -52,6 +53,10 @@ class ComposerStaticInit63661d32234c94a7c47675fbaa16f77c
         'Valitron\\' =>
         array (
             0 => __DIR__ . '/..' . '/vlucas/valitron/src/Valitron',
+        ),
+        'Slim\\Views\\' =>
+        array (
+            0 => __DIR__ . '/..' . '/slim/php-view/src',
         ),
         'Slim\\Psr7\\' =>
         array (
