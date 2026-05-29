@@ -8,13 +8,16 @@ use App\Middleware\GetProduct;
 use Slim\Routing\RouteCollectorProxy;
 use App\Middleware\RequireAPIKey;
 use App\Controllers\Home;
+use App\Controllers\SignUp;
 use App\Middleware\AddJsonResponseHeader;
 
 
 //create a route for home
 //since it has an invoke we dont have to specify the method name
 $app->get('/',Home::class);
-
+$app->get('/signup',[SignUp::class,'new']);
+//post route for signup
+$app->post('/signup',[SignUp::class,'create']);
 
 //create a route group
 $app->group('/api',function(RouteCollectorProxy $group){

@@ -1,9 +1,2 @@
-<!DOCTYPE html>
-<html>
-    <head>
-        <title>Slim API</title>
-    </head>
-    <body>
-        <h1>Welcome</h1>
-    </body>
-</html>
+<h1>Welcome</h1>
+<a href="/signup">Sign up for an API key</a>

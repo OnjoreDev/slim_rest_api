@@ -8,10 +8,11 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Server\RequestHandlerInterface as RequestHandler;
 use Slim\Psr7\Factory\ResponseFactory ;
+use App\Repositories\UserRepository;
 
 class RequireAPIKey{
      
-     public function __construct(private ResponseFactory $factory){
+     public function __construct(private ResponseFactory $factory, private UserRepository $repository){
 
      }
     
@@ -31,8 +32,13 @@ class RequireAPIKey{
              //return status code 400 for bad request
              return $response->withStatus(400);
           }
-          //if($params['api-key'] !== 'abc123'){
-         if($request->getHeaderLine('X-API-Key') !== 'abc123'){    
+          
+          $api_key = $request->getHeaderLine('X-API-Key');
+
+          //obtain api_key value from the database
+          $user = $this->repository->find('api_key',$api_key);
+           //if user is not found
+          if($user === false){
             //create a factory response object
             $response = $this->factory->createResponse();
 

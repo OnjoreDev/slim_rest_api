@@ -18,6 +18,9 @@ return [
     //definitions that tells the slim where to find the viw
     PhpRenderer::class => function(){
          $renderer = new PhpRenderer(__DIR__ . '/../views');
+         //configuration for checking where layout file is
+         $renderer->setlayout('layout.php');
+         
          return $renderer;
     }
 
