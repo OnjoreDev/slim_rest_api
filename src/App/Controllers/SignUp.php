@@ -9,6 +9,8 @@ use Psr\Http\Message\ResponseInterface as Response;
 use Slim\Views\PhpRenderer;
 use Valitron\Validator;
 use App\Repositories\UserRepository;
+use Defuse\Crypto\Key;
+use Defuse\Crypto\Crypto;
 
 class SignUp{
 
@@ -21,6 +23,14 @@ class SignUp{
           'password' => ['required',['lengthMin',6]],
           'password_confirmation'=>['required',['equals','password']]
        ]);
+
+       //custom rule
+       //we check whether a record with the same name exists
+       $this->validator->rule(function ($field,$value,$params,$fields){
+
+       return $this->repository->find('email',$value) === false;
+
+       },'email')->message('{field} is already taken');
     }
     public function new(Request $request, Response $response):Response{
            return $this->view->render($response,'signup.php');
@@ -52,9 +62,13 @@ class SignUp{
         //generate an api key from random bytes
         $api_key =  bin2hex(random_bytes(16));
        
-        //set the value of apikey
-        //$data['api_key'] = $api_key;
-        $data['api_key'] = '';
+        //encrypt the api_key
+        //step1 : create a variable that holds the encryption
+        $encryption_key = Key::loadFromAsciiSafeString($_ENV['ENCRYPTION_KEY']);
+
+        //step2: now encrypt the api_key
+        $data['api_key'] = Crypto::encrypt($api_key,$encryption_key);
+
        
         //provide a value for api_key_hash
         //$data['api_key_hash'] = '';
@@ -63,8 +77,18 @@ class SignUp{
         //lets add the data to the database table
         $this->repository->create($data);
 
-        $response->getBody()->write("Here is your API key: $api_key");
-       return $response;
+      //   $response->getBody()->write("Here is your API key: $api_key");
+       
+      return $response
+      ->withHeader('Location','/signup/success')
+      ->withStatus(302)
+      ;
 
+    }
+
+    //page where user is redirected to after successful sign up
+    public function success(Request $request, Response $response):Response{
+
+      return $this->view->render($response,'signup-success.php');
     }
 }

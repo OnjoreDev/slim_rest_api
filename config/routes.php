@@ -12,7 +12,8 @@ use App\Controllers\SignUp;
 use App\Controllers\Login;
 use App\Middleware\AddJsonResponseHeader;
 use App\Middleware\ActivateSession;
-
+use App\Controllers\Profile;
+use App\Middleware\RequireLogin;
 
 //create a route group for session bound routes
 $app->group('',function(RouteCollectorProxy $group){
@@ -22,13 +23,21 @@ $app->group('',function(RouteCollectorProxy $group){
         $group->get('/signup',[SignUp::class,'new']);
         //post route for signup
         $group->post('/signup',[SignUp::class,'create']);
+        //route for sign up success
+        $group->get('/signup/success',[SignUp::class,'success']);
+
+
 
         //get route for login
         $group->get('/login',[Login::class,'new']);
         //add post route for login
         $group->post('/login',[Login::class,'create']);
+     
+     
         //route to log out the user
         $group->get('/logout',[Login::class,'destroy']);
+        //profile view
+        $group->get('/profile',[Profile::class,'show'])->add(RequireLogin::class);
 })->add(ActivateSession::class);
 
 

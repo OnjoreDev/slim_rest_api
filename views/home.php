@@ -6,6 +6,9 @@
     <a href="/login">Log in</a>
 
 <?php else: ?>
-    <a href="/logout">Logout</a>
+    <a href="/profile">View Profile</a>
+      or 
+    
+      <a href="/logout">Logout</a>
 
 <?php endif; ?>    
