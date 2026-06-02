@@ -35,8 +35,12 @@ class RequireAPIKey{
           
           $api_key = $request->getHeaderLine('X-API-Key');
 
+          //generate api_key_hash
+          $api_key_hash = hash_hmac('sha256',$api_key,$_ENV['HASH_SECRET_KEY']);
+
           //obtain api_key value from the database
-          $user = $this->repository->find('api_key',$api_key);
+          //look for api_key_hash in the database
+          $user = $this->repository->find('api_key_hash',$api_key_hash);
            //if user is not found
           if($user === false){
             //create a factory response object

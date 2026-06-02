@@ -9,15 +9,28 @@ use Slim\Routing\RouteCollectorProxy;
 use App\Middleware\RequireAPIKey;
 use App\Controllers\Home;
 use App\Controllers\SignUp;
+use App\Controllers\Login;
 use App\Middleware\AddJsonResponseHeader;
+use App\Middleware\ActivateSession;
 
 
+//create a route group for session bound routes
+$app->group('',function(RouteCollectorProxy $group){
 //create a route for home
 //since it has an invoke we dont have to specify the method name
-$app->get('/',Home::class);
-$app->get('/signup',[SignUp::class,'new']);
-//post route for signup
-$app->post('/signup',[SignUp::class,'create']);
+        $group->get('/',Home::class);
+        $group->get('/signup',[SignUp::class,'new']);
+        //post route for signup
+        $group->post('/signup',[SignUp::class,'create']);
+
+        //get route for login
+        $group->get('/login',[Login::class,'new']);
+        //add post route for login
+        $group->post('/login',[Login::class,'create']);
+        //route to log out the user
+        $group->get('/logout',[Login::class,'destroy']);
+})->add(ActivateSession::class);
+
 
 //create a route group
 $app->group('/api',function(RouteCollectorProxy $group){

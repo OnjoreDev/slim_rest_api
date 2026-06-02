@@ -6,10 +6,15 @@ declare(strict_types=1);
 use Slim\Factory\AppFactory;
 use DI\ContainerBuilder;
 use Slim\Handlers\Strategies\RequestResponseArgs;
+use Dotenv\Dotenv;
 
 //create a constant for the firectory DIR part
 define('APP_ROOT',dirname(__DIR__));
 require APP_ROOT . '/vendor/autoload.php';
+
+// 2. Load the .env file right here
+$dotenv = Dotenv::createImmutable(APP_ROOT); // Uses your APP_ROOT constant to find the file
+$dotenv->load();
 
 //create an object of the container class
 $builder = new ContainerBuilder;

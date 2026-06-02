@@ -8,10 +8,10 @@ use Slim\Views\PhpRenderer;
 // the value is an anonymous function that returns the object
 return [
     Database::class => function(){
-        return new Database(host:'127.0.0.1',
-                            name:'api_db',
-                            user:'root',
-                            password:''  
+        return new Database(host:$_ENV['DB_HOST']?? '127.0.0.1',
+                            name:$_ENV['DB_NAME'] ??'api_db',
+                            user:$_ENV['DB_USER'] ?? 'root',
+                            password: $_ENV['DB_PASS']??''  
          );
     },
 

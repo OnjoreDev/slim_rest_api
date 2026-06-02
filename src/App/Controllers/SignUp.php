@@ -53,10 +53,12 @@ class SignUp{
         $api_key =  bin2hex(random_bytes(16));
        
         //set the value of apikey
-        $data['api_key'] = $api_key;
+        //$data['api_key'] = $api_key;
+        $data['api_key'] = '';
        
         //provide a value for api_key_hash
-        $data['api_key_hash'] = '';
+        //$data['api_key_hash'] = '';
+        $data['api_key_hash'] = hash_hmac('sha256',$api_key,$_SERVER['HASH_SECRET_KEY']);
         //print_r($data);
         //lets add the data to the database table
         $this->repository->create($data);
